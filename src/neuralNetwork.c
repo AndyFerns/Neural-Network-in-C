@@ -73,3 +73,27 @@ void forward(Network *net, double *input) {
         in = layer->outputs;
     }
 }
+
+
+// backward chaining for rule-based inference
+void backward(Network *net, double *input, double *target, double lr) {
+    // Output layer
+    Layer *out = &net->layers[net->num_layers - 1];
+    for (int i = 0; i < out->output_size; i++) {
+        double o = out->outputs[i];
+        out->deltas[i] = (o - target[i]) * o * (1 - o);
+    }
+
+    // Hidden layers
+    for (int l = net->num_layers - 2; l >= 0; l--) {
+        Layer *layer = &net->layers[l];
+        Layer *next = &net->layers[l + 1];
+
+        for (int i = 0; i < layer->output_size; i++) {
+            double error = 0.0;
+            for (int j = 0; j < next->output_size; j++)
+                error += next->weights[j][i] * next->deltas[j];
+            layer->deltas[i] = layer->outputs[i] * (1 - layer->outputs[i]) * error;
+        }
+    }
+}
