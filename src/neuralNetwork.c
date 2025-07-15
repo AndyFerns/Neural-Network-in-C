@@ -45,3 +45,17 @@ Network createNetwork(int input_size, int *hidden_sizes, int num_hidden, int out
 }
 
 
+// neural network memory freeing 
+void freeNetwork(Network *net) {
+    for (int l = 0; l < net->num_layers; l++) {
+        Layer layer = net->layers[l];
+        for (int i = 0; i < layer.output_size; i++)
+            free(layer.weights[i]);
+        free(layer.weights);
+        free(layer.biases);
+        free(layer.outputs);
+        free(layer.deltas);
+    }
+    free(net->layers);
+}
+
