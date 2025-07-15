@@ -111,3 +111,13 @@ void backward(Network *net, double *input, double *target, double lr) {
         }
     }
 }
+
+// Loss function
+double meanSquaredError(double *output, double *target, int size) {
+    double sum = 0.0;
+    for (int i = 0; i < size; i++) {
+        double d = output[i] - target[i];
+        sum += d * d;
+    }
+    return sum / size;
+}
