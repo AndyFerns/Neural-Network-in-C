@@ -4,6 +4,7 @@
 #include <string.h>
 #include "utils.c"
 
+//Layer Constructor
 Layer createLayer(int input_size, int output_size) {
     Layer layer;
     layer.input_size = input_size;
@@ -26,4 +27,21 @@ Layer createLayer(int input_size, int output_size) {
     }
     return layer;
 }
+
+// Network constructor
+Network createNetwork(int input_size, int *hidden_sizes, int num_hidden, int output_size) {
+    Network net;
+    net.num_layers = num_hidden + 1;
+    net.layers = malloc(net.num_layers * sizeof(Layer));
+
+    int previous = input_size;
+    for (int i = 0; i < num_hidden; i++) {
+        net.layers[i] = createLayer(previous, hidden_sizes[i]);
+        previous = hidden_sizes[i];
+    }
+
+    net.layers[num_hidden] = createLayer(previous, output_size);
+    return net;
+}
+
 
