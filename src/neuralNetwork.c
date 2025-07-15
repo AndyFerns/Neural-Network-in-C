@@ -96,4 +96,18 @@ void backward(Network *net, double *input, double *target, double lr) {
             layer->deltas[i] = layer->outputs[i] * (1 - layer->outputs[i]) * error;
         }
     }
+
+    // Update weights
+    double *prev_outputs = input;
+    for (int l = 0; l < net->num_layers; l++) {
+        Layer *layer = &net->layers[l];
+        if (l > 0)
+            prev_outputs = net->layers[l - 1].outputs;
+
+        for (int i = 0; i < layer->output_size; i++) {
+            for (int j = 0; j < layer->input_size; j++)
+                layer->weights[i][j] -= lr * layer->deltas[i] * prev_outputs[j];
+            layer->biases[i] -= lr * layer->deltas[i];
+        }
+    }
 }
