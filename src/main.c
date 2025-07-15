@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../headers/neuralNetwork.h"
+#include "../headers/plot.h"
 
 int main() {
     srand(42);
@@ -12,6 +13,8 @@ int main() {
     double inputs[4][2] = {{0,0}, {0,1}, {1,0}, {1,1}};
     double outputs[4][1] = {{0}, {1}, {1}, {0}};
 
+    double lossHistory[10000]; // array to track loss history
+
     for (int epoch = 0; epoch < 10000; epoch++) {
         double loss = 0;
         for (int i = 0; i < 4; i++) {
@@ -19,6 +22,9 @@ int main() {
             loss += meanSquaredError(net.layers[net.num_layers - 1].outputs, outputs[i], 1);
             backward(&net, inputs[i], outputs[i], 0.5);
         }
+
+        lossHistory[epoch] = loss; // track loss value for plotting graph
+
         if (epoch % 1000 == 0)
             printf("Epoch %d, Loss = %f\n", epoch, loss);
     }
@@ -28,6 +34,9 @@ int main() {
         forward(&net, inputs[i]);
         printf("%d XOR %d = %f\n", (int)inputs[i][0], (int)inputs[i][1], net.layers[net.num_layers - 1].outputs[0]);
     }
+
+    printf("Plotting Loss Graph:\n");
+    plotLoss(lossHistory, 10000, 60, 20);
 
     freeNetwork(&net);
     return 0;
