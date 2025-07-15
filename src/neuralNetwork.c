@@ -44,7 +44,6 @@ Network createNetwork(int input_size, int *hidden_sizes, int num_hidden, int out
     return net;
 }
 
-
 // neural network memory freeing 
 void freeNetwork(Network *net) {
     for (int l = 0; l < net->num_layers; l++) {
@@ -59,3 +58,18 @@ void freeNetwork(Network *net) {
     free(net->layers);
 }
 
+// forward chaining for data-driven inference
+void forward(Network *net, double *input) {
+    double *in = input;
+
+    for (int l = 0; l < net->num_layers; l++) {
+        Layer *layer = &net->layers[l];
+        for (int i = 0; i < layer->output_size; i++) {
+            double sum = layer->biases[i];
+            for (int j = 0; j < layer->input_size; j++)
+                sum += layer->weights[i][j] * in[j];
+            layer->outputs[i] = sigmoid(sum);
+        }
+        in = layer->outputs;
+    }
+}
