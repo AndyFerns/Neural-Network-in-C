@@ -7,7 +7,8 @@ double sigmoid(double x) {
 }
 
 double sigmoidDerivative(double x) {
-    return (sigmoid(x) * (1 - sigmoid(x)));
+    double s = sigmoid(x);
+    return (s * (1 - s));
 }
 
 double randWeight() {
