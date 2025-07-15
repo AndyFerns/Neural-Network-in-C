@@ -23,5 +23,6 @@ void freeNetwork(Network *net); // Network Mem Free
 void forward(Network* net, double *input); // FW chaining
 void backward(Network *net, double *input, double *target, double learning_rate); // Backward chaining
 double meanSquaredError(double *output, double *target, int size);
+Layer createLayer(int input_size, int output_size);
 
 #endif
